@@ -1,0 +1,39 @@
+services:
+  server:
+    build:
+      context: .
+      target: development
+    ports:
+      - 8080:8080
+      - 8000:8000
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - POSTGRES_URL=jdbc:postgresql://db:5432/user-service
+      - POSTGRES_USER=user-service
+      - POSTGRES_PASSWORD=user-service
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/user-service
+      - SPRING_DATASOURCE_USERNAME=user-service
+      - SPRING_DATASOURCE_PASSWORD=user-service
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+  db:
+    image: postgres:latest
+    restart: always
+    user: postgres
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=user-service
+      - POSTGRES_USER=user-service
+      - POSTGRES_PASSWORD=user-service
+    expose:
+      - 5432:5432
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-U", "user-service" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+volumes:
+  db-data:
+
