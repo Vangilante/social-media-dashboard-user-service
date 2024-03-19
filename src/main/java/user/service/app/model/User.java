@@ -4,6 +4,8 @@ import java.time.LocalDate;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -18,6 +20,7 @@ import lombok.NoArgsConstructor;
 public class User {
 	
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="user_id")
 	private Long id; 
 	
@@ -36,18 +39,23 @@ public class User {
 	@Column(name="user_registrationDate")
 	private LocalDate registrationDate;
 	
+	@Column(name="user_role")
+	private String role;
+	
 	public User(String username, 
 				String password, 
 				String email, 
 				String bio, 
+				String role, 
 				LocalDate currentDate) {}
 	
 	public static User registerUser( 
 									String username,
 									String password,
 									String email,
-									String bio ) {
+									String bio,
+									String role ) {
 		LocalDate currentDate = LocalDate.now(); 
-		return new User(username, password, email, bio, currentDate);
+		return new User(username, password, email, bio, role, currentDate);
 	}
 }
