@@ -17,8 +17,9 @@ services:
       - SPRING_DATASOURCE_USERNAME=user-service
       - SPRING_DATASOURCE_PASSWORD=user-service
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - JAVA_TOOL_OPTIONS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:8000
   db:
-    image: postgres:latest
+    image: postgres
     restart: always
     user: postgres
     volumes:
@@ -34,6 +35,16 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+      
+  pgadmin:
+     image: dpage/pgadmin4
+     restart: always
+     environment:
+        PGADMIN_DEFAULT_EMAIL: pgadmin@email.com
+        PGADMIN_DEFAULT_PASSWORD: pgadmin
+     ports:
+        - "5050:80"
+     depends_on:
+        - db
 volumes:
   db-data:
-
